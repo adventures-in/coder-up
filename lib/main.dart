@@ -1,4 +1,7 @@
+import 'package:coder_up/web_socket_service.dart';
 import 'package:flutter/material.dart';
+
+final service = WebSocketService();
 
 void main() {
   runApp(const MyApp());
@@ -37,28 +40,33 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Expanded(
               child: Center(
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      const TextSpan(text: 'Hello '),
-                      const TextSpan(
-                        text: 'bold',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const TextSpan(text: ' world!'),
-                      for (var word in _words) TextSpan(text: ' $word'),
-                    ],
-                  ),
-                ),
+                child: StreamBuilder(
+                    stream: service.stream,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasError && snapshot.hasData) {
+                        _words.add(snapshot.data! as String);
+                      }
+                      return Text.rich(
+                        TextSpan(
+                          children: [
+                            const TextSpan(text: 'Hello '),
+                            const TextSpan(
+                              text: 'bold',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const TextSpan(text: ' world!'),
+                            for (var word in _words) TextSpan(text: ' $word'),
+                          ],
+                        ),
+                      );
+                    }),
               ),
             ),
             TextField(
               decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Enter a search term'),
-              onSubmitted: (value) => setState(() {
-                _words.add(value);
-              }),
+              onSubmitted: (value) => service.publish(value),
             )
           ],
         ),
