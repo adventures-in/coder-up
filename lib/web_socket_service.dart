@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-const uriString = 'ws://web-socket-analysis-server-3rru3aooga-uc.a.run.app';
+// const uriString = 'ws://web-socket-analysis-server-3rru3aooga-uc.a.run.app';
+const uriString = 'ws://localhost:8080';
 
 class WebSocketService {
   WebSocketService() {
